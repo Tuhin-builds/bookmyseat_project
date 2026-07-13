@@ -1,0 +1,17 @@
+# Python environment
+venv/
+__pycache__/
+
+# Database
+db.sqlite3
+*.sqlite3
+
+# Environment variables
+.env
+
+# VS Code / IDE settings
+.vscode/
+.idea/
+
+# Media/Uploads (If you have local user uploads)
+media/

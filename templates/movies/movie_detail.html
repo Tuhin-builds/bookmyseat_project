@@ -1,0 +1,24 @@
+{% extends "users/basic.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <h2>{{ movie.name }}</h2>
+    
+    {% if movie.trailer_url %}
+        <div class="ratio ratio-16x9 my-4" style="max-width: 800px;">
+            <iframe 
+  src="{{ movie.trailer_url }}" 
+  referrerpolicy="strict-origin-when-cross-origin" 
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+  allowfullscreen 
+  loading="lazy">
+            </iframe>
+        </div>
+    {% else %}
+        <div class="alert alert-info">Trailer currently unavailable.</div>
+    {% endif %}
+    
+    <p><strong>Cast:</strong> {{ movie.cast }}</p>
+    <p>{{ movie.description }}</p>
+</div>
+{% endblock %}
