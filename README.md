@@ -44,6 +44,7 @@ Start the background scheduler manually by running python run_cleanup.py in a se
 
 
 
+
 # Task 3: Payment Gateway Integration with Idempotency and Webhook Security
 Objective: Integrate Razorpay for ticket purchases with secure server-side verification, implementing idempotency and robust webhook handling to prevent double-booking.
 
