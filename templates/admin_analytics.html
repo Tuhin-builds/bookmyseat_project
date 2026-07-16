@@ -7,7 +7,7 @@
     <h3>Top 5 Popular Movies</h3>
     <ul>
         {% for movie in popular_movies %}
-            <li>{{ movie.movie__title }}: {{ movie.total_bookings }} bookings</li>
+            <li>{{ movie.movie__name }}: {{ movie.total_bookings }} bookings</li>
         {% endfor %}
     </ul>
     

@@ -171,7 +171,7 @@ def admin_analytics(request):
    
     revenue = Booking.objects.filter(status='CONFIRMED').aggregate(Sum('price'))['price__sum'] or 0
     
-    popular_movies = Booking.objects.values('movie__title').annotate(
+    popular_movies = Booking.objects.values('movie__name').annotate(
         total_bookings=Count('id')
     ).order_by('-total_bookings')[:5]
     
