@@ -36,6 +36,8 @@ class Seat(models.Model):
 
     def __str__(self):
         return f'{self.seat_number} in {self.theater.name}'
+    
+    
 
 class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
@@ -43,16 +45,13 @@ class Booking(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, db_index=True)
     theater = models.ForeignKey(Theater, on_delete=models.CASCADE, db_index=True)
 
-    # Added price field for Revenue Analytics
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     order_id = models.CharField(max_length=100, null=True, blank=True)
     payment_id = models.CharField(max_length=100, null=True, blank=True)
     
-    # Indexed status for fast filtering of 'Confirmed' vs 'Cancelled'
     status = models.CharField(max_length=20, default='PENDING', db_index=True)
     
-    # Indexed created_at for fast date-range aggregation (daily/weekly/monthly)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     
     def __str__(self):
