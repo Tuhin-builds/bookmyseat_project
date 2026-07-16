@@ -7,5 +7,6 @@ urlpatterns=[
     path('movie/<int:movie_id>/', views.movie_detail, name='movie-detail'),
     path('create-order/', views.create_order, name='create_order'),
     path('razorpay-webhook/', views.razorpay_webhook, name='razorpay_webhook'),
+    path('admin/analytics/', views.admin_analytics, name='admin_analytics'),
 
 ]

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Admin Analytics Dashboard</h1>
+    <p>Total Revenue: ${{ revenue }}</p>
+    
+    <h3>Top 5 Popular Movies</h3>
+    <ul>
+        {% for movie in popular_movies %}
+            <li>{{ movie.movie__title }}: {{ movie.total_bookings }} bookings</li>
+        {% endfor %}
+    </ul>
+    
+    <p>Cancellation Rate: {{ cancellation_rate }}%</p>
+</body>
+</html>
