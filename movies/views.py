@@ -11,6 +11,10 @@ import json
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Sum, Count
+from django.shortcuts import render
+from .models import Booking
 
 def movie_detail(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
@@ -120,11 +124,9 @@ def create_order(request):
         return JsonResponse({"order_id": order['id'], "key": settings.RAZORPAY_KEY_ID})
 
     except Exception as e:
-        # This will print the actual error to your terminal (VS Code console)
-        # where you run 'python manage.py runserver'
+        
         print(f"DEBUGGING ERROR: {e}") 
         
-        # This returns the error message to the browser so you can see it in the console
         return JsonResponse({'error': str(e)}, status=500)
 
 
@@ -161,3 +163,25 @@ def razorpay_webhook(request):
             seat.save()
             
     return HttpResponse(status=200)
+
+
+
+@staff_member_required
+def admin_analytics(request):
+   
+    revenue = Booking.objects.filter(status='CONFIRMED').aggregate(Sum('price'))['price__sum'] or 0
+    
+    popular_movies = Booking.objects.values('movie__title').annotate(
+        total_bookings=Count('id')
+    ).order_by('-total_bookings')[:5]
+    
+    total = Booking.objects.count()
+    cancelled = Booking.objects.filter(status='CANCELLED').count()
+    cancellation_rate = (cancelled / total * 100) if total > 0 else 0
+    
+    context = {
+        'revenue': revenue,
+        'popular_movies': popular_movies,
+        'cancellation_rate': round(cancellation_rate, 2),
+    }
+    return render(request, 'admin_analytics.html', context)
