@@ -58,3 +58,23 @@ Idempotency: Implemented transaction atomicity and event ID tracking to ensure e
 Resilience: Designed system to gracefully handle timeouts and partial failures, ensuring consistent database state even during network interruptions.
 
 Monitoring: Documented the complete payment lifecycle, from order creation to final fulfillment, to ensure transparency and ease of auditing.
+
+
+
+
+
+
+# Task 4: Advanced Admin Analytics Dashboard with Aggregation Optimization
+
+Objective: Build a secure Admin Dashboard that displays real-time analytics including total revenue, most popular movies, busiest theaters, peak booking hours, and cancellation rates, optimized for large datasets.
+
+
+Implementation Highlights:
+
+Metrics: Real-time calculation of total revenue, popular movies based on bookings, seat occupancy rates, peak hours, and cancellation metrics.
+
+Security: Implemented role-based authentication using decorators to restrict dashboard access to authorized staff and superusers, preventing privilege escalation and unauthorized API access.
+
+Optimization: Utilized database-level aggregation functions (Sum, Count) instead of loading entire datasets into memory, paired with proper indexing for high performance on large datasets.
+
+Caching: Configured in-memory caching mechanisms to prevent performance degradation under repeated queries or heavy traffic.
