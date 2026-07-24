@@ -15,18 +15,54 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Sum, Count
 from django.shortcuts import render
 from .models import Booking
+from django.core.paginator import Paginator
 
 def movie_detail(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
     return render(request, 'movies/movie_detail.html', {'movie': movie})
 
+
 def movie_list(request):
-    search_query=request.GET.get('search')
+    
+    search_query = request.GET.get('search', '')
+    selected_genres = request.GET.getlist('genre')
+    selected_languages = request.GET.getlist('language')
+    sort_by = request.GET.get('sort', '-release_date')
+    page_number = request.GET.get('page', 1)
+
+    movies = Movie.objects.all()
+
     if search_query:
-        movies=Movie.objects.filter(name__icontains=search_query)
-    else:
-        movies=Movie.objects.all()
-    return render(request,'movies/movie_list.html',{'movies':movies})
+        movies = movies.filter(name__icontains=search_query)
+
+    if selected_genres:
+        movies = movies.filter(genre__in=selected_genres)
+    
+    if selected_languages:
+        movies = movies.filter(language__in=selected_languages)
+
+    allowed_sorts = ['release_date', '-release_date', 'name', '-name', 'rating', '-rating']
+    if sort_by in allowed_sorts:
+        movies = movies.order_by(sort_by)
+
+    genre_counts = Movie.objects.values('genre').annotate(count=Count('id'))
+    language_counts = Movie.objects.values('language').annotate(count=Count('id'))
+
+    paginator = Paginator(movies, 10)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'movies': page_obj, 
+        'search_query': search_query,
+        'selected_genres': selected_genres,
+        'selected_languages': selected_languages,
+        'genre_counts': genre_counts,
+        'language_counts': language_counts,
+        'current_sort': sort_by,
+    }
+    return render(request, 'movies/movie_list.html', context)
+
 
 def theater_list(request,movie_id):
     movie = get_object_or_404(Movie,id=movie_id)
