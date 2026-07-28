@@ -23,7 +23,6 @@ def movie_detail(request, movie_id):
 
 
 def movie_list(request):
-    
     search_query = request.GET.get('search', '')
     selected_genres = request.GET.getlist('genre')
     selected_languages = request.GET.getlist('language')
@@ -34,10 +33,8 @@ def movie_list(request):
 
     if search_query:
         movies = movies.filter(name__icontains=search_query)
-
     if selected_genres:
         movies = movies.filter(genre__in=selected_genres)
-    
     if selected_languages:
         movies = movies.filter(language__in=selected_languages)
 
@@ -45,10 +42,23 @@ def movie_list(request):
     if sort_by in allowed_sorts:
         movies = movies.order_by(sort_by)
 
-    genre_counts = Movie.objects.values('genre').annotate(count=Count('id'))
-    language_counts = Movie.objects.values('language').annotate(count=Count('id'))
+    genre_base_qs = Movie.objects.all()
+    if search_query:
+        genre_base_qs = genre_base_qs.filter(name__icontains=search_query)
+    if selected_languages:
+        genre_base_qs = genre_base_qs.filter(language__in=selected_languages)
+    
+    genre_counts = genre_base_qs.values('genre').annotate(count=Count('id'))
 
-    paginator = Paginator(movies, 10)
+    lang_base_qs = Movie.objects.all()
+    if search_query:
+        lang_base_qs = lang_base_qs.filter(name__icontains=search_query)
+    if selected_genres:
+        lang_base_qs = lang_base_qs.filter(genre__in=selected_genres)
+        
+    language_counts = lang_base_qs.values('language').annotate(count=Count('id'))
+
+    paginator = Paginator(movies, 3)
     page_obj = paginator.get_page(page_number)
 
     context = {
@@ -62,6 +72,7 @@ def movie_list(request):
         'current_sort': sort_by,
     }
     return render(request, 'movies/movie_list.html', context)
+
 
 
 def theater_list(request,movie_id):

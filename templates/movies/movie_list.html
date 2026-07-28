@@ -69,30 +69,29 @@
     </div>
 
     <!-- Movie List Grid (Using page_obj) -->
-    <div class="row" id="movieList">
+    <div class="row justify-content-center" id="movieList">
         {% for movie in page_obj %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ movie.image.url }}" class="card-img-top" alt="{{ movie.name }}" style="height: 300px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ movie.name }}</h5>
-                    <p class="card-text mb-1">
-                        <small class="text-muted">Genre: {{ movie.genre }} | Lang: {{ movie.language }}</small>
+        <div class="col-lg-4 col-md-6 mb-4 d-flex align-items-stretch">
+            <div class="card w-100 shadow-sm border-0 rounded-lg overflow-hidden">
+                <img src="{{ movie.image.url }}" class="card-img-top" alt="{{ movie.name }}" style="height: 320px; object-fit: cover;">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title font-weight-bold text-dark">{{ movie.name }}</h5>
+                    <p class="card-text mb-2">
+                        <span class="badge badge-primary px-2 py-1 mr-1">{{ movie.genre }}</span>
+                        <span class="badge badge-secondary px-2 py-1">{{ movie.language }}</span>
                     </p>
-                    <p class="card-text">
-                        <i class="fas fa-star text-warning"></i> {{ movie.rating }}
+                    <p class="card-text mb-2 text-warning">
+                        <i class="fas fa-star"></i> <span class="text-dark font-weight-bold">{{ movie.rating }}</span>
                     </p>
-                    <p class="card-text">
-                        <small class="text-muted">
-                            <i class="fas fa-users"></i> Cast: {{ movie.cast }}
-                        </small>
+                    <p class="card-text text-muted small mt-auto">
+                        <i class="fas fa-users mr-1"></i> Cast: {{ movie.cast }}
                     </p>
                 </div>
-                <div class="card-footer bg-white border-top-0">
-                    <a href="{% url 'theater_list' movie.id %}" class="btn btn-outline-primary btn-block mb-2">
-                        View Theaters <i class="fas fa-chevron-right ml-2"></i>
+                <div class="card-footer bg-white border-0 pb-3">
+                    <a href="{% url 'theater_list' movie.id %}" class="btn btn-primary btn-block btn-sm mb-2 font-weight-bold shadow-sm">
+                        View Theaters <i class="fas fa-chevron-right ml-1"></i>
                     </a>
-                    <a href="{% url 'movie-detail' movie.id %}" class="btn btn-outline-secondary btn-block">
+                    <a href="{% url 'movie-detail' movie.id %}" class="btn btn-outline-secondary btn-block btn-sm">
                         Watch Trailer
                     </a>
                 </div>
@@ -100,7 +99,7 @@
         </div>
         {% empty %}
         <div class="col-12 text-center py-5">
-            <p class="lead">No movies found matching your filters.</p>
+            <p class="lead text-muted">No movies found matching your filters.</p>
         </div>
         {% endfor %}
     </div>

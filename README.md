@@ -78,3 +78,25 @@ Security: Implemented role-based authentication using decorators to restrict das
 Optimization: Utilized database-level aggregation functions (Sum, Count) instead of loading entire datasets into memory, paired with proper indexing for high performance on large datasets.
 
 Caching: Configured in-memory caching mechanisms to prevent performance degradation under repeated queries or heavy traffic.
+
+
+
+
+
+
+# Task 5: Scalable Genre and Language Filtering with Query Optimization
+
+Objective: Implement advanced server-side multi-select filtering for genres and languages, optimized for large movie catalogs (5,000+ entries) with full index support, seamless pagination/sorting persistence, and dynamic reactive filter counts.
+
+
+Implementation Highlights:
+
+Multi-Select Filtering: Processed multiple selected genres and languages server-side using Django's `__in` queries to ensure flexible and accurate data retrieval.
+
+Query Performance & Indexing: Configured single-field indexes (`db_index=True`) and a high-performance composite index (`models.Index(fields=['genre', 'language'])`) to completely prevent inefficient full-table scans.
+
+Dynamic Filter Counts: Implemented independent base querysets with database-level aggregations (`.values().annotate(Count('id'))`) so that filter counts dynamically adjust based on active user constraints.
+
+Pagination & Sorting Persistence: Preserved active search queries, filter combinations, and sorting attributes seamlessly across all pagination links.
+
+Performance Justification: Leveraged database-side aggregation and strict indexing strategies to balance query flexibility with scalability, ensuring high performance even under large-scale movie catalogs.

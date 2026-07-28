@@ -6,14 +6,14 @@ from django.core.validators import URLValidator
 
 
 class Movie(models.Model):
-    name = models.CharField(max_length=255, db_index=True) # Kept your 'name' field and added index
-    genre = models.CharField(max_length=100, db_index=True) # Added for Task 5 filtering
-    language = models.CharField(max_length=50, db_index=True) # Added for Task 5 filtering
-    release_date = models.DateField(db_index=True, null=True, blank=True) # Added for sorting/filtering
+    name = models.CharField(max_length=255, db_index=True) 
+    genre = models.CharField(max_length=100, db_index=True) 
+    language = models.CharField(max_length=50, db_index=True) 
+    release_date = models.DateField(db_index=True, null=True, blank=True) 
     image = models.ImageField(upload_to="movies/")
     rating = models.DecimalField(max_digits=3, decimal_places=1)
     cast = models.TextField()
-    description = models.TextField(blank=True, null=True) # optional
+    description = models.TextField(blank=True, null=True) 
     trailer_url = models.URLField(max_length=500, blank=True, null=True, validators=[URLValidator()])
 
     class Meta:
