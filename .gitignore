@@ -15,3 +15,6 @@ db.sqlite3
 
 # Media/Uploads (If you have local user uploads)
 media/
+
+# Vercel Build Output
+staticfiles_build/

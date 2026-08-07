@@ -91,12 +91,33 @@ Objective: Implement advanced server-side multi-select filtering for genres and 
 
 Implementation Highlights:
 
-Multi-Select Filtering: Processed multiple selected genres and languages server-side using Django's `__in` queries to ensure flexible and accurate data retrieval.
+Multi-Select Filtering: Processed multiple selected genres and languages server-side using Django's __in queries to ensure flexible and accurate data retrieval.
 
-Query Performance & Indexing: Configured single-field indexes (`db_index=True`) and a high-performance composite index (`models.Index(fields=['genre', 'language'])`) to completely prevent inefficient full-table scans.
+Query Performance & Indexing: Configured single-field indexes (db_index=True) and a high-performance composite index (models.Index(fields=['genre', 'language'])`) to completely prevent inefficient full-table scans.
 
-Dynamic Filter Counts: Implemented independent base querysets with database-level aggregations (`.values().annotate(Count('id'))`) so that filter counts dynamically adjust based on active user constraints.
+Dynamic Filter Counts: Implemented independent base querysets with database-level aggregations (.values().annotate(Count('id'))) so that filter counts dynamically adjust based on active user constraints.
 
 Pagination & Sorting Persistence: Preserved active search queries, filter combinations, and sorting attributes seamlessly across all pagination links.
 
 Performance Justification: Leveraged database-side aggregation and strict indexing strategies to balance query flexibility with scalability, ensuring high performance even under large-scale movie catalogs.
+
+
+
+
+
+
+
+# Task 6: Asynchronous Ticket Confirmation Emails with Retry Logic & Error Logging
+
+Objective: Implement a resilient, non-blocking email notification system using background threads, custom utilities, and robust error handling.
+
+
+Implementation Highlights:
+
+Asynchronous Processing: Offloaded email delivery to Python's threading module to ensure the main booking transaction and webhook responses remain instant and non-blocking.
+
+Resilience & Retries: Built automated retry logic with a delay mechanism inside utils.py to handle intermittent SMTP network failures gracefully.
+
+Error Logging: Integrated Python's logging framework (logging) to track successful deliveries, warning states, and critical failures (logger.critical) if all retry attempts are exhausted.
+
+Security & Template Support: Configured HTML-rendered ticket confirmation templates via Django's EmailMultiAlternatives utilizing secure environment-based credentials.

@@ -16,6 +16,10 @@ from django.db.models import Sum, Count
 from django.shortcuts import render
 from .models import Booking
 from django.core.paginator import Paginator
+import threading
+from .utils import send_ticket_confirmation_email
+
+
 
 def movie_detail(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
@@ -124,7 +128,6 @@ def book_seats(request, theater_id):
     seats = Seat.objects.filter(theater=theater)
     return render(request, 'movies/seat_selection.html', {'theaters': theater, "seats": seats})
 
-# Initialize Razorpay client
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 @csrf_exempt
@@ -195,8 +198,8 @@ def razorpay_webhook(request):
         payment_entity = data['payload']['payment']['entity']
         order_id = payment_entity['order_id']
         payment_id = payment_entity['id']
+        user_email = payment_entity.get('email')
         
-        # Find ALL bookings associated with this order_id
         bookings = Booking.objects.filter(order_id=order_id, status='PENDING')
         
         for booking in bookings:
@@ -204,15 +207,27 @@ def razorpay_webhook(request):
             booking.payment_id = payment_id
             booking.save()
             
-            # Update seat availability
             seat = booking.seat
             seat.is_booked = True
             seat.save()
+
+            booking_payload = {
+                'user_email': booking.user.email,  
+                'movie_title': booking.movie.name,
+                'theater_name': booking.theater.name,
+                'show_time': str(booking.theater.show_time) if hasattr(booking.theater, 'show_time') else 'N/A',
+                'seat_numbers': seat.seat_number if hasattr(seat, 'seat_number') else str(seat.id),
+                'payment_id': payment_id
+            }
+
+            email_thread = threading.Thread(
+                target=send_ticket_confirmation_email, 
+                args=(booking_payload,)
+            )
+            email_thread.daemon = True
+            email_thread.start()
             
     return HttpResponse(status=200)
-
-
-
 @staff_member_required
 def admin_analytics(request):
    
