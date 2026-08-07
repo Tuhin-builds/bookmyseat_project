@@ -10,7 +10,7 @@ class Movie(models.Model):
     genre = models.CharField(max_length=100, db_index=True) 
     language = models.CharField(max_length=50, db_index=True) 
     release_date = models.DateField(db_index=True, null=True, blank=True) 
-    image = models.ImageField(upload_to="movies/")
+    image = models.URLField(max_length=500)
     rating = models.DecimalField(max_digits=3, decimal_places=1)
     cast = models.TextField()
     description = models.TextField(blank=True, null=True) 
